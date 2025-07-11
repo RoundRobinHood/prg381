@@ -6,6 +6,6 @@
 </head>
 <body>
     <h1>Hello from JSP!</h1>
-    <p><a href="hello">Click here to say hello from a servlet</a></p>
+    <p><a href="hello">Click here to say hello to a servlet</a></p>
 </body>
 </html>
