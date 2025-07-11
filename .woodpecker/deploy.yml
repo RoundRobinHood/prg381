@@ -26,14 +26,14 @@ steps:
         set -e
         cd webapp
         cat <<EOF > .env
-ENABLE_TRAEFIK=true
-TLS=true
-HOST_DOMAIN=$HOST_DOMAIN
-ENTRYPOINTS=$TRAEFIK_ENTRYPOINTS
-TLS_RESOLVER=$TRAEFIK_TLS_RESOLVER
-NETWORK_EXTERNAL=$NETWORK_EXTERNAL
-NETWORK=$NETWORK_NAME
-EOF
+        ENABLE_TRAEFIK=true
+        TLS=true
+        HOST_DOMAIN=$HOST_DOMAIN
+        ENTRYPOINTS=$TRAEFIK_ENTRYPOINTS
+        TLS_RESOLVER=$TRAEFIK_TLS_RESOLVER
+        NETWORK_EXTERNAL=$NETWORK_EXTERNAL
+        NETWORK=$NETWORK_NAME
+        EOF
         docker compose -p prg381 build --no-cache
         docker compose -p prg381 down
         docker compose -p prg381 up
