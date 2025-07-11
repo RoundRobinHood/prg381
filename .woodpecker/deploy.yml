@@ -36,4 +36,4 @@ steps:
         EOF
         docker compose -p prg381 build --no-cache
         docker compose -p prg381 down
-        docker compose -p prg381 up
+        docker compose -p prg381 up -d
