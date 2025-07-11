@@ -13,6 +13,5 @@ public class HelloServlet extends HttpServlet {
         throws ServletException, IOException {
         resp.setContentType("text/html");
         resp.getWriter().println("<h1>Hello from HelloServlet!</h1>");
-        resp.getWriter().println("<b>this is bold</b>");
     }
 }
