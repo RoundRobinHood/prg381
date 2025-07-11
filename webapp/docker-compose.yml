@@ -1,0 +1,21 @@
+services:
+  webapp:
+    build: .
+    restart: unless-stopped
+    ports:
+      - 8080:8080
+    networks:
+      - ${NETWORK:-web}
+    labels:
+      - "traefik.enable=${ENABLE_TRAEFIK:-false}"
+      - "traefik.http.routers.prg381.rule=Host(`${HOST_DOMAIN:-localhost}`)"
+      - "traefik.http.routers.prg381.entrypoints=${ENTRYPOINTS:-web}"
+      - "traefik.http.routers.prg381.tls=${TLS:-false}"
+      - "traefik.http.routers.prg381.tls.certresolver=${TLS_RESOLVER:-myresolver}"
+      - "traefik.http.services.prg381.loadbalancer.server.port=8080"
+
+networks:
+  web:
+    name: ${NETWORK:-web}
+    external: ${NETWORK_EXTERNAL:-false}
+    
