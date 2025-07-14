@@ -6,6 +6,10 @@ services:
       - 8080:8080
     networks:
       - ${NETWORK:-web}
+    environment:
+      - DB_USER=${POSTGRES_USER:-postgres}
+      - DB_PASS=${POSTGRES_PASSWORD:-password}
+      - "CONN_STR=jdbc:postgresql://postgres:5432/postgres"
     labels:
       - "traefik.enable=${ENABLE_TRAEFIK:-false}"
       - "traefik.http.routers.prg381.rule=Host(`${HOST_DOMAIN:-localhost}`)"
@@ -13,6 +17,13 @@ services:
       - "traefik.http.routers.prg381.tls=${TLS:-false}"
       - "traefik.http.routers.prg381.tls.certresolver=${TLS_RESOLVER:-myresolver}"
       - "traefik.http.services.prg381.loadbalancer.server.port=8080"
+  postgres:
+    image: postgres:17
+    environment:
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-password}
+      - POSTGRES_USER=${POSTGRES_USER:-postgres}
+    networks:
+      - ${NETWORK:-web}
 
 networks:
   web:
