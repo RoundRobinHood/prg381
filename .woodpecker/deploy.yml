@@ -1,11 +1,12 @@
 when:
   - event: push
     branch: main
-    path:
-      include:
-        - webapp/**
 
 steps:
+  - name: build
+    image: maven:3.9.10-eclipse-temurin-24
+    commands:
+      - mvn package
   - name: deploy
     image: docker:cli
     volumes:
@@ -21,6 +22,8 @@ steps:
         from_secret: NETWORK_NAME
       NETWORK_EXTERNAL:
         from_secret: NETWORK_EXTERNAL
+      POSTGRES_PASSWORD:
+        from_secret: POSTGRES_PASSWORD
     commands:
       - |
         set -e
@@ -33,6 +36,7 @@ steps:
         TLS_RESOLVER=$TRAEFIK_TLS_RESOLVER
         NETWORK_EXTERNAL=$NETWORK_EXTERNAL
         NETWORK=$NETWORK_NAME
+        POSTGRES_PASSWORD=$POSTGRES_PASSWORD
         EOF
         docker compose -p prg381 build --no-cache
         docker compose -p prg381 down
