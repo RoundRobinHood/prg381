@@ -16,6 +16,7 @@
   <modules>
     <module>shared</module>
     <module>webapp</module>
+    <module>desktop</module>
   </modules>
 
   <properties>
