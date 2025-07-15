@@ -26,22 +26,6 @@ public class DBConnection {
     randomizer.nextBytes(bytes);
     return HexFormat.of().formatHex(bytes);
   }
-
-  public static Session CreateSession(int student_number, Timestamp expiry_date) throws SQLException {
-    Session sess = new Session(newSessID(), student_number, expiry_date);
-
-    try(Connection con = dataSource.getConnection()) {
-      try(PreparedStatement stmt = con.prepareStatement("INSERT INTO user_session (student_number, session_id, expiryDate) VALUES (?, ?, ?);")) {
-        stmt.setInt(1, sess.student_number);
-        stmt.setString(2, sess.session_id);
-        stmt.setTimestamp(3, sess.expiry_date);
-        stmt.executeUpdate();
-      }
-    }
-
-    return sess;
-  }
-
   static {
     HikariConfig config = new HikariConfig();
     config.setJdbcUrl(Config.getConnectionStr());
@@ -69,6 +53,26 @@ public class DBConnection {
     dataSource.close();
   }
 
+  public static Session LoadSession(String sessid) throws SQLException {
+    try(Connection con = dataSource.getConnection()) {
+      try(PreparedStatement stmt = con.prepareStatement("SELECT * FROM user_session WHERE session_id = ?")) {
+        stmt.setString(1, sessid);
+        try(ResultSet rs = stmt.executeQuery()) {
+          if(!rs.next()) {
+            return null;
+          } else {
+            Integer student_number = rs.getInt("student_number");
+            if(rs.wasNull()) student_number = null;
+            Timestamp expiry_date = rs.getTimestamp("expiry_date");
+            Session ret = new Session(sessid, student_number, expiry_date);
+            ret.flash_msg = rs.getString("flash_msg");
+            return ret;
+          }
+        }
+      }
+    }
+  }
+
   // Checks and creates schema if missing
   public static boolean schemaCheck() throws SQLException {
     Map<String, String> cmds = new LinkedHashMap<>();
@@ -86,11 +90,14 @@ public class DBConnection {
     cmds.put("user_session", """
         CREATE TABLE user_session (
           session_id     CHAR(32) UNIQUE NOT NULL,
-          student_number INT NOT NULL,
-          expiryDate     TIMESTAMP NOT NULL,
+          student_number INT,
+          flash_msg      VARCHAR,
+          expiry_date    TIMESTAMP NOT NULL,
+          PRIMARY KEY(session_id),
           FOREIGN KEY(student_number) REFERENCES student(student_number)
         );
       """);
+
     boolean allPresent = true;
     try (Connection con = getConnection()) {
       for (Map.Entry<String, String> entry : cmds.entrySet()) {

@@ -5,12 +5,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.time.Duration;
-import java.time.Instant;
 
 import com.roundrobinhood.shared.Session;
 import com.roundrobinhood.webapp.db.DBConnection;
+import com.roundrobinhood.webapp.db.SessionStorage;
 
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
@@ -52,13 +50,8 @@ public class LoginServlet extends HttpServlet {
               return;
             } else {
               if(BCrypt.checkpw(password, rs.getString("password"))) {
-                Session sess = DBConnection.CreateSession(rs.getInt("student_number"), Timestamp.from(Instant.now().plus(Duration.ofHours(10))));
-                Cookie cookie = new Cookie("sess_id", sess.session_id);
-                cookie.setHttpOnly(true);
-                cookie.setSecure(Config.getHTTPSecure());
-                cookie.setPath("/");
-                cookie.setMaxAge(60 * 60 * 10);
-
+                Session sess = SessionStorage.NewSession((Integer)rs.getInt("student_number"));
+                Cookie cookie = SessionStorage.CreateCookie(sess);
                 resp.addCookie(cookie);
                 resp.sendRedirect("/dashboard");
                 return;

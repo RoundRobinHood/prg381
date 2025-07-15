@@ -21,6 +21,7 @@ import org.mindrot.jbcrypt.BCrypt;
 
 import com.roundrobinhood.shared.Session;
 import com.roundrobinhood.webapp.db.DBConnection;
+import com.roundrobinhood.webapp.db.SessionStorage;
 
 public class RegisterServlet extends HttpServlet {
   public final String jspPath = "/WEB-INF/pages/register.jsp";
@@ -62,12 +63,8 @@ public class RegisterServlet extends HttpServlet {
             student_number = keys.getInt(1);
           }
         }
-        Session sess = DBConnection.CreateSession(student_number, Timestamp.from(Instant.now().plus(Duration.ofHours(10))));
-        Cookie cookie = new Cookie("sess_id", sess.session_id);
-        cookie.setHttpOnly(true);
-        cookie.setSecure(Config.getHTTPSecure());
-        cookie.setPath("/");
-        cookie.setMaxAge(60 * 60 * 10);
+        Session sess = SessionStorage.NewSession(student_number);
+        Cookie cookie = SessionStorage.CreateCookie(sess);
 
         resp.addCookie(cookie);
         resp.sendRedirect("/dashboard");
