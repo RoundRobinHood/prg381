@@ -38,8 +38,8 @@ public class Main {
             // Create the main application frame
             JFrame frame = new JFrame("BC Student Wellness Management System - Desktop Application");
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            frame.setSize(1000, 700);
-            frame.setMinimumSize(new Dimension(800, 600));
+            frame.setSize(700, 450);
+            frame.setMinimumSize(new Dimension(500, 35));
             frame.setLocationRelativeTo(null);
 
             // Create an instance of our MainDashboardPanel, passing the selected role
