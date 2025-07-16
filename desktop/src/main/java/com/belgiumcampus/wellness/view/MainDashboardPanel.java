@@ -1,5 +1,6 @@
 package com.belgiumcampus.wellness.view;
 
+import com.belgiumcampus.wellness.util.MenuItem;
 import com.belgiumcampus.wellness.util.UserRole;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -21,6 +22,26 @@ public class MainDashboardPanel {
     private JPanel SubmitFeedbackTab;
     private JPanel MyFeedbackHistoryTab;
     private JPanel HomeTab;
+    private JButton AddStudent;
+    private JButton Delete;
+    private JButton AddAppointmentButton;
+    private JButton DeleteButton;
+    private JButton Update;
+    private JTextField StudentIDTextBox;
+    private JTextField AppointmentIDTextBox;
+    private JButton UpdateButton;
+    private JTextField CounselorIDTextBox;
+    private JTextField AppointmentDateTextBox;
+    private JTextField AppointmentTimeTextBox;
+    private JTextField NameTextBox;
+    private JTextField EmailTextBox;
+    private JTextField SurnameTextBox;
+    private JTextField PhoneNumberTextBOx;
+    private JPasswordField passwordField1;
+    private JTextField StudentNumberTextBox;
+    private JLabel PasswordTextBox;
+    private JTable AppointmentTable;
+    private JTable StudentsTable;
 
     // Components for BookAppointmentTab
     private JLabel HeadingLabel;
