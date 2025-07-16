@@ -39,7 +39,7 @@ public class LoginServlet extends HttpServlet {
       jspDispatch.forward(req, resp);
     } else {
       try(Connection con = DBConnection.getConnection()) {
-        try(PreparedStatement stmt = con.prepareStatement("SELECT * FROM student WHERE email = ?;")) {
+        try(PreparedStatement stmt = con.prepareStatement("SELECT * FROM students WHERE email = ?;")) {
           stmt.setString(1, email);
 
           try(ResultSet rs = stmt.executeQuery()) {

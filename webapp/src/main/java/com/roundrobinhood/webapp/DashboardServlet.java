@@ -30,7 +30,7 @@ public class DashboardServlet extends HttpServlet {
         return;
       }
       try(Connection con = DBConnection.getConnection()) {
-        try(PreparedStatement stmt = con.prepareStatement("SELECT * FROM student WHERE student_number = ?;")) {
+        try(PreparedStatement stmt = con.prepareStatement("SELECT * FROM students WHERE student_number = ?;")) {
           stmt.setInt(1, session.student_number);
           try(ResultSet rs = stmt.executeQuery()) {
             rs.next();

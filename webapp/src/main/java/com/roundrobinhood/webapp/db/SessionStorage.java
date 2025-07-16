@@ -12,6 +12,7 @@ import java.time.Instant;
 import java.util.HexFormat;
 
 import com.roundrobinhood.shared.Session;
+import com.roundrobinhood.shared.Student;
 import com.roundrobinhood.webapp.Config;
 
 import jakarta.servlet.http.Cookie;
@@ -46,7 +47,7 @@ public class SessionStorage {
       throw new NullPointerException();
     
     try(Connection con = DBConnection.getConnection()) {
-      try(PreparedStatement stmt = con.prepareStatement("SELECT * FROM user_session WHERE session_id = ?;")) {
+      try(PreparedStatement stmt = con.prepareStatement("SELECT * FROM user_sessions WHERE session_id = ?;")) {
         stmt.setString(1, sessid);
         try(ResultSet rs = stmt.executeQuery()) {
           if(!rs.next()) {
@@ -58,6 +59,32 @@ public class SessionStorage {
             Timestamp expiry_date = rs.getTimestamp("expiry_date");
 
             return new Session(sessid, student_number, expiry_date, flash_msg);
+          }
+        }
+      }
+    }
+  }
+
+  public static Student getStudent(String sessid) throws SQLException {
+    if(sessid == null)
+      throw new NullPointerException();
+
+    try(Connection con = DBConnection.getConnection()) {
+      try(PreparedStatement stmt = con.prepareStatement("select students.* from students inner join user_sessions on students.student_number = user_sessions.student_number where session_id = ?;")) {
+        stmt.setString(1, sessid);
+        try(ResultSet rs = stmt.executeQuery()) {
+          if(!rs.next()) {
+            return null;
+          } else {
+            int student_number = rs.getInt("student_number");
+            String name = rs.getString("name");
+            String surname = rs.getString("surname");
+            String email = rs.getString("email");
+            String phone = rs.getString("phone");
+            String password = rs.getString("password");
+            String role = rs.getString("role");
+
+            return new Student(student_number, name, surname, email, phone, password, role);
           }
         }
       }
@@ -108,7 +135,7 @@ public class SessionStorage {
     Session result = new Session(sessid, student_number, expiry_date, flash_msg);
 
     try(Connection con = DBConnection.getConnection()) {
-      try(PreparedStatement stmt = con.prepareStatement("INSERT INTO user_session (session_id, student_number, flash_msg, expiry_date) VALUES (?,?,?,?);")) {
+      try(PreparedStatement stmt = con.prepareStatement("INSERT INTO user_sessions (session_id, student_number, flash_msg, expiry_date) VALUES (?,?,?,?);")) {
         stmt.setString(1, sessid);
         if(student_number != null)
           stmt.setInt(2, student_number);
@@ -125,7 +152,7 @@ public class SessionStorage {
 
   public static void UpdateSessionFlashMsg(String sessid, String flash_msg) throws SQLException {
     try(Connection con = DBConnection.getConnection()) {
-      try(PreparedStatement stmt = con.prepareStatement("UPDATE user_session SET flash_msg = ? WHERE session_id = ?;")) {
+      try(PreparedStatement stmt = con.prepareStatement("UPDATE user_sessions SET flash_msg = ? WHERE session_id = ?;")) {
         stmt.setString(1, flash_msg);
         stmt.setString(2, sessid);
 
