@@ -1,9 +1,7 @@
 package com.belgiumcampus.wellness.view;
 
-import com.belgiumcampus.wellness.util.MenuItem;
 import com.belgiumcampus.wellness.util.UserRole;
 import javax.swing.*;
-import java.awt.*;
 
 public class MainDashboardPanel {
 
@@ -19,6 +17,50 @@ public class MainDashboardPanel {
     private JPanel SubmitFeedbackTab;
     private JPanel MyFeedbackHistoryTab;
     private JPanel HomeTab;
+    private JTextField NameTextBox;
+    private JTextField SurnameTextBox;
+    private JButton DeleteButton;
+    private JTextField AppointmentTimeTextBox;
+    private JTable table1;
+    private JLabel lbCounsID;
+    private JTextField txtIdCouns;
+    private JLabel lbname;
+    private JTextField txtname;
+    private JLabel lbSpes;
+    private JTextField txtSpes;
+    private JLabel lbAvail;
+    private JTextField txtAvail;
+    private JButton btnUpdateCouns;
+    private JButton btnDeleteCouns;
+    private JButton btnAddCouns;
+    private JTable table2;
+    private JLabel lbfeedID;
+    private JTextField txtfeedID;
+    private JLabel lbappointID;
+    private JTextField txtAppoint;
+    private JLabel lbstudentNr;
+    private JTextField txtStudentNr;
+    private JLabel lbRating;
+    private JTextField txtRating;
+    private JLabel lbComments;
+    private JTextField textField1;
+    private JButton btnSumitfeed;
+    private JButton btnEditfeed;
+    private JButton btnDeletefeed;
+    private JTextField AppointmentDateTextBox;
+    private JButton AddAppointmentButton;
+    private JTextField StudentIDTextBox;
+    private JTextField AppointmentIDTextBox;
+    private JTextField CounselorIDTextBox;
+    private JButton UpdateButton;
+    private JButton AddStudent;
+    private JButton Delete;
+    private JButton Update;
+    private JTextField StudentNumberTextBox;
+    private JLabel PasswordTextBox;
+    private JPasswordField passwordField1;
+    private JTextField PhoneNumberTextBOx;
+    private JTextField EmailTextBox;
 
     private UserRole currentUserRole; // To store the role
 
