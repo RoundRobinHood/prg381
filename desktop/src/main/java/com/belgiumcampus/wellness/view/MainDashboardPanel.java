@@ -1,48 +1,103 @@
 package com.belgiumcampus.wellness.view;
 
 import com.belgiumcampus.wellness.util.MenuItem;
+import com.belgiumcampus.wellness.util.UserRole;
 import javax.swing.*;
 import java.awt.*;
 
-public class MainDashboardPanel extends JPanel {
+public class MainDashboardPanel {
 
-    private JTabbedPane tabbedPane;
+    private JTabbedPane HomeTabbedPanel;
+    private JPanel StudentManagementTab;
+    private JPanel MainPanel;
+    private JPanel AppointmentManagementTab;
+    private JPanel CounselorManagementTab;
+    private JPanel FeedbackManagementTab;
+    private JPanel BookAppointmentTab;
+    private JPanel MyAppointmentsTab;
+    private JPanel ViewCounselorsTab;
+    private JPanel SubmitFeedbackTab;
+    private JPanel MyFeedbackHistoryTab;
+    private JPanel HomeTab;
 
-    public MainDashboardPanel() {
-        setLayout(new BorderLayout());
+    private UserRole currentUserRole; // To store the role
 
-        initializeComponents();
-        addComponents();
+    /**The role of the user currently logged in (STUDENT or ADMIN).*/
+    public MainDashboardPanel(UserRole role) {
+        this.currentUserRole = role;
+
+        // Adjust UI elements based on the user's role
+        configureUIForRole();
     }
 
-    private void initializeComponents() {
-        tabbedPane = new JTabbedPane();
-
-        // Create placeholder panels for each management section
-        // We'll replace these with actual content from AppointmentPanel, CounselorPanel, FeedbackPanel later
-        JPanel appointmentPanel = new JPanel();
-        appointmentPanel.add(new JLabel(MenuItem.APPOINTMENT_MANAGEMENT.getDisplayName() + " - Content will go here"));
-        appointmentPanel.setBackground(Color.LIGHT_GRAY);
-
-        JPanel counselorPanel = new JPanel();
-        counselorPanel.add(new JLabel(MenuItem.COUNSELOR_MANAGEMENT.getDisplayName() + " - Content will go here"));
-        counselorPanel.setBackground(Color.CYAN);
-
-        JPanel feedbackPanel = new JPanel();
-        feedbackPanel.add(new JLabel(MenuItem.FEEDBACK_MANAGEMENT.getDisplayName() + " - Content will go here"));
-        feedbackPanel.setBackground(Color.YELLOW);
-
-        // Add the placeholder panels to the tabbed pane using our MenuItem enum
-        tabbedPane.addTab(MenuItem.APPOINTMENT_MANAGEMENT.getDisplayName(), appointmentPanel);
-        tabbedPane.addTab(MenuItem.COUNSELOR_MANAGEMENT.getDisplayName(), counselorPanel);
-        tabbedPane.addTab(MenuItem.FEEDBACK_MANAGEMENT.getDisplayName(), feedbackPanel);
-
-        // Optional: Add a logout button or menu item, perhaps in a separate area if not using tabs for logout
-        // For a simple tabbed interface, logout might be handled by a separate button on the main frame or via a menu bar.
-        // For now, we'll focus on the core management tabs.
+    public JPanel getRootPanel() {
+        return MainPanel;
     }
 
-    private void addComponents() {
-        add(tabbedPane, BorderLayout.CENTER);
+    /**Configures the visibility and accessibility of UI elements based on thecurrent user's role.*/
+    private void configureUIForRole() {
+        if (currentUserRole == UserRole.STUDENT) {
+            // For students, remove tabs that are primarily for admin management.
+
+            // Remove Counselor Management tab for students
+            int counselorTabIndex = HomeTabbedPanel.indexOfComponent(CounselorManagementTab);
+            if (counselorTabIndex != -1) {
+                HomeTabbedPanel.removeTabAt(counselorTabIndex);
+            }
+
+            // Remove Counselor Management tab for students
+            int stdentTabIndex = HomeTabbedPanel.indexOfComponent(StudentManagementTab);
+            if (stdentTabIndex != -1) {
+                HomeTabbedPanel.removeTabAt(stdentTabIndex);
+            }
+
+            // Remove Feedback Management tab for students
+            int feedbackTabIndex = HomeTabbedPanel.indexOfComponent(FeedbackManagementTab);
+            if (feedbackTabIndex != -1) {
+                HomeTabbedPanel.removeTabAt(feedbackTabIndex);
+            }
+
+            // Remove Appointment Management tab for students
+            int appointmentTabIndex = HomeTabbedPanel.indexOfComponent(AppointmentManagementTab);
+            if (appointmentTabIndex != -1) {
+                HomeTabbedPanel.removeTabAt(appointmentTabIndex);
+            }
+
+        }
+        if (currentUserRole == UserRole.ADMIN) {
+            // For admins, remove tabs that are primarily for student management.
+
+            // Remove Book Appointment tab for students
+            int bookAppointmentTabIndex = HomeTabbedPanel.indexOfComponent(BookAppointmentTab);
+            if (bookAppointmentTabIndex != -1) {
+                HomeTabbedPanel.removeTabAt(bookAppointmentTabIndex);
+            }
+
+            // Remove Book Appointment tab for students
+            int myAppointmentsTabIndex = HomeTabbedPanel.indexOfComponent(MyAppointmentsTab);
+            if (myAppointmentsTabIndex != -1) {
+                HomeTabbedPanel.removeTabAt(myAppointmentsTabIndex);
+            }
+
+            // Remove View Counselors tab for students
+            int viewCounselorsTabIndex = HomeTabbedPanel.indexOfComponent(ViewCounselorsTab);
+            if (viewCounselorsTabIndex != -1) {
+                HomeTabbedPanel.removeTabAt(viewCounselorsTabIndex);
+            }
+
+            // Remove Submit Feedback tab for students
+            int submitFeedbackTabIndex = HomeTabbedPanel.indexOfComponent(SubmitFeedbackTab);
+            if (submitFeedbackTabIndex != -1) {
+                HomeTabbedPanel.removeTabAt(submitFeedbackTabIndex);
+            }
+
+            // Remove Book Appointment tab for students
+            int myFeedbackHistoryTabIndex = HomeTabbedPanel.indexOfComponent(MyFeedbackHistoryTab);
+            if (myFeedbackHistoryTabIndex != -1) {
+                HomeTabbedPanel.removeTabAt(myFeedbackHistoryTabIndex);
+            }
+
+        }
     }
+
 }
