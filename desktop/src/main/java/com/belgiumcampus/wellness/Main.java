@@ -38,7 +38,7 @@ public class Main {
             // Create the main application frame
             JFrame frame = new JFrame("BC Student Wellness Management System - Desktop Application");
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            frame.setSize(700, 500);
+            frame.setSize(700, 550);
             frame.setMinimumSize(new Dimension(500, 350));
             frame.setLocationRelativeTo(null);
 
