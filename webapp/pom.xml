@@ -14,9 +14,6 @@
   <name>prg381 Maven Webapp</name>
   <packaging>war</packaging>
 
-  <!-- FIXME change it to the project's website -->
-  <url>http://www.example.com</url>
-
   <dependencies>
     <dependency>
       <groupId>jakarta.servlet</groupId>
