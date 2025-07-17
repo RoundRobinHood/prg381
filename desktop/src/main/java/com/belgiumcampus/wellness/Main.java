@@ -43,10 +43,10 @@ public class Main {
             frame.setLocationRelativeTo(null);
 
             // Create an instance of our MainDashboardPanel, passing the selected role
-            MainDashboardPanel dashboardForm = new MainDashboardPanel(selectedRole); // Instantiate the bound class
+            MainDashboardPanel dashboardForm = new MainDashboardPanel(selectedRole);
 
             // Add the root panel of the form to the frame's content pane
-            frame.getContentPane().add(dashboardForm.getRootPanel(), BorderLayout.CENTER); // Get the root panel from the form
+            frame.getContentPane().add(dashboardForm.getRootPanel(), BorderLayout.CENTER);
 
             // Make the frame visible
             frame.setVisible(true);
