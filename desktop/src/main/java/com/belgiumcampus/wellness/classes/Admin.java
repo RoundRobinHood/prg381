@@ -2,12 +2,16 @@ package com.belgiumcampus.wellness.classes;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class Admin extends User {
+    private String AdminID;
+
     public static final List<Admin> AllAdmins = new ArrayList<>();
 
-    public Admin(String name, String surname, String email, String phone, String password) {
+    public Admin(String adminId, String name, String surname, String email, String phone, String password) {
         super(name, surname, email, phone, password, "admin"); // Role is fixed as "admin"
+        this.AdminID = adminId;
     }
 
     // --- CRUD Operations (Local List) ---
@@ -21,7 +25,7 @@ public class Admin extends User {
      * @param password Admin's password.
      * @return The newly created Admin object, or null if an admin with the same email already exists.
      */
-    public static Admin addAdmin(String name, String surname, String email, String phone, String password) {
+    public static Admin addAdmin(String adminID, String name, String surname, String email, String phone, String password) {
         // Check for uniqueness based on email (as per User class equals/hashCode)
         for (Admin a : AllAdmins) {
             if (a.getEmail().equals(email)) {
@@ -29,31 +33,32 @@ public class Admin extends User {
                 return null;
             }
         }
-        Admin newAdmin = new Admin(name, surname, email, phone, password);
+        Admin newAdmin = new Admin(adminID, name, surname, email, phone, password);
         AllAdmins.add(newAdmin);
         return newAdmin;
     }
 
     /**
      * Updates an existing admin's information.
-     * @param email The email of the admin to update (PK equivalent).
+     * @param adminID The email of the admin to update (PK equivalent).
      * @param newName New name.
      * @param newSurname New surname.
      * @param newPhone New phone number.
      * @param newPassword New password.
      * @return true if the admin was found and updated, false otherwise.
      */
-    public static boolean updateAdmin(String email, String newName, String newSurname, String newPhone, String newPassword) {
+    public static boolean updateAdmin(String adminID, String newName, String newSurname, String emailString, String newPhone, String newPassword) {
         for (Admin admin : AllAdmins) {
-            if (admin.getEmail().equals(email)) {
+            if (admin.getAdminID().equals(adminID)) {
                 admin.setName(newName);
                 admin.setSurname(newSurname);
+                admin.setEmail(emailString);
                 admin.setPhone(newPhone);
                 admin.setPassword(newPassword);
                 return true;
             }
         }
-        System.err.println("Error: Admin with email " + email + " not found for update.");
+        System.err.println("Error: Admin with id  " + adminID + " not found for update.");
         return false;
     }
 
@@ -85,5 +90,9 @@ public class Admin extends User {
                 ", surname='" + surname + '\'' +
                 ", email='" + email + '\'' +
                 '}';
+    }
+    // Getter
+    public String getAdminID() {
+        return AdminID;
     }
 }

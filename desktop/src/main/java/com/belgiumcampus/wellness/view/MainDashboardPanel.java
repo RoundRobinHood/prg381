@@ -1,5 +1,7 @@
 package com.belgiumcampus.wellness.view;
 
+import com.belgiumcampus.wellness.classes.Admin;
+import com.belgiumcampus.wellness.classes.Student;
 import com.belgiumcampus.wellness.util.UserRole;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
@@ -12,8 +14,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.print.PrinterException;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.text.MessageFormat;
@@ -161,10 +161,9 @@ public class MainDashboardPanel extends JPanel {
             loadAppointmentsData();
         }
         if (StudentsTable != null) {
-            String[] columnNames = {"UserID", "Name", "Surname", "Email", "Phone Number", "Password", "Role"};
+            String[] columnNames = {"UserID", "Name", "Surname", "Email", "Phone Number", "Role"};
             StudentsTableModel = new DefaultTableModel(columnNames, 0);
             StudentsTable.setModel(StudentsTableModel);
-            loadAppointmentsData();
         }
         if (MyAppointmentsTable != null) {
             String[] columnNames = {"Counselor", "Date", "Time", "Status"};
@@ -367,11 +366,6 @@ public class MainDashboardPanel extends JPanel {
 
             @Override
             public void changedUpdate(DocumentEvent e) {
-                // This method is for attribute changes (e.g., bolding text),
-                // usually not needed for simple text filtering, but included for completeness.
-                // You can call applyCounselorFilter() here too if your filtering logic
-                // relies on more than just content changes.
-                // applyCounselorFilter();
             }
         });
         BookAppointmentButton.addActionListener(new ActionListener() {
@@ -500,7 +494,13 @@ public class MainDashboardPanel extends JPanel {
                                     "\nPhone: " + phone +
                                     "\nRole: " + role);
                     clearUserFields();
-
+                    if (role == "Student"){
+                        Student.addStudent(userID, name, surname, email, phone, password);
+                    }
+                    if (role == "Admin"){
+                        Admin.addAdmin(userID, name, surname, email, phone, password);
+                    }
+                    updateUserTable();
                 }
 
 
@@ -631,7 +631,13 @@ public class MainDashboardPanel extends JPanel {
                                     "\nPhone: " + phone +
                                     "\nRole: " + role);
                     clearUserFields();
-
+                    if (role == "Student"){
+                        Student.updateStudent(userID, name, surname, email, phone, password);
+                    }
+                    if (role =="Admin"){
+                        Admin.updateAdmin(userID, name, surname, email, phone, password);
+                    }
+                    updateUserTable();
                 }
             }
         });
@@ -716,6 +722,35 @@ public class MainDashboardPanel extends JPanel {
                 }
             }
         });
+    }
+
+    private void updateUserTable() {
+        if (StudentsTableModel != null){
+            StudentsTableModel.setRowCount(0);
+
+            for (Admin admin : Admin.AllAdmins) {
+                Object[] rowData = {
+                        admin.getAdminID(),
+                        admin.getName(),
+                        admin.getSurname(),
+                        admin.getEmail(),
+                        admin.getPhone(),
+                        admin.getRole()
+                };
+                StudentsTableModel.addRow(rowData);
+            }
+            for (Student student : Student.AllStudents){
+                Object[] rowData = {
+                        student.getStudentNumber(),
+                        student.getName(),
+                        student.getSurname(),
+                        student.getEmail(),
+                        student.getPhone(),
+                        student.getRole()
+                };
+                StudentsTableModel.addRow(rowData);
+            }
+        }
     }
 
     private List<Object[]> originalAppointmentsData; // <--- Correct location for this declaration
