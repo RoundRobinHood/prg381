@@ -25,6 +25,11 @@
       <servlet-class>com.roundrobinhood.webapp.APIServlet</servlet-class>
     </servlet>
 
+    <servlet>
+      <servlet-name>APILoginServlet</servlet-name>
+      <servlet-class>com.roundrobinhood.webapp.APILoginServlet</servlet-class>
+    </servlet>
+
     <servlet-mapping>
       <servlet-name>LoginServlet</servlet-name>
       <url-pattern>/login</url-pattern>
@@ -38,6 +43,11 @@
     <servlet-mapping>
       <servlet-name>DashboardServlet</servlet-name>
       <url-pattern>/dashboard</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+      <servlet-name>APILoginServlet</servlet-name>
+      <url-pattern>/api/login</url-pattern>
     </servlet-mapping>
 
     <servlet-mapping>

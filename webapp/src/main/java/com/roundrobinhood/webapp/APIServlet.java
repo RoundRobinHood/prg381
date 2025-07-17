@@ -2,10 +2,8 @@ package com.roundrobinhood.webapp;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 
 import com.roundrobinhood.shared.Session;
