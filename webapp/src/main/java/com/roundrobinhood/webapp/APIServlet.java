@@ -40,20 +40,21 @@ public class APIServlet extends HttpServlet {
 
     HttpURLConnection connection = (HttpURLConnection) new URL(Config.getPostGrestURL() + path).openConnection();
 
-    connection.setRequestMethod(req.getMethod());
-    System.out.println(req.getMethod());
-    connection.setDoInput(true);
-    if (body.length != 0 && !req.getMethod().equalsIgnoreCase("GET")) {
-        connection.setDoOutput(true);
-        connection.getOutputStream().write(body);
-    }
-    
     if(req.getContentType() != null) {
       connection.setRequestProperty("Content-Type", req.getContentType());
     }
     
+    connection.setDoInput(true);
+
     connection.setRequestProperty("X-Request-Student-Number", session.student_number.toString());
     connection.setRequestProperty("X-Request-Role", student.role);
+    connection.setRequestMethod(req.getMethod());
+    System.out.println(req.getMethod());
+
+    if (body.length != 0 && !req.getMethod().equalsIgnoreCase("GET")) {
+        connection.setDoOutput(true);
+        connection.getOutputStream().write(body);
+    }
 
     resp.setStatus(connection.getResponseCode());
 

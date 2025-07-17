@@ -5,7 +5,7 @@ import java.sql.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class DataManager extends Thread {
-    private static final String DB_PATH = "my_local_db";
+    private static final String DB_PATH = Config.getOrDefault("db.path", "local_db");
     private static final String DB_URL = "jdbc:derby:" + DB_PATH + ";create=true";
     private static final AtomicBoolean initialized = new AtomicBoolean(false);
 
@@ -112,7 +112,7 @@ public class DataManager extends Thread {
         // Select all rows with local_modified = true and local_deleted = false
         String sql = "SELECT * FROM " + table + " WHERE local_modified = TRUE AND local_deleted = FALSE";
         try (PreparedStatement ps = conn.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
+            ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
                 // TODO: Call your API upload method for this row here

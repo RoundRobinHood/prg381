@@ -1,9 +1,6 @@
 package com.roundrobinhood.shared;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class Student {
+public class Student extends DataAccessObject {
   public int student_number;
   public String name;
   public String surname;
@@ -21,4 +18,6 @@ public class Student {
     this.password = password;
     this.role = role;
   }
+
+  public Student() {}
 }

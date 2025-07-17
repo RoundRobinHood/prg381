@@ -1,5 +1,5 @@
 CREATE TABLE students (
-  student_number VARCHAR(10) PRIMARY KEY,
+  student_number INTEGER PRIMARY KEY,
   name           VARCHAR(70) NOT NULL,
   surname        VARCHAR(70) NOT NULL,
   email          VARCHAR(100) NOT NULL UNIQUE,
@@ -13,7 +13,7 @@ CREATE TABLE students (
 );
 
 CREATE TABLE counselors (
-  counselor_id   VARCHAR(10) PRIMARY KEY,
+  counselor_id   INTEGER PRIMARY KEY,
   name           VARCHAR(70) NOT NULL,
   specialization VARCHAR(10) NOT NULL,
   availability   VARCHAR(7) NOT NULL,
@@ -23,7 +23,7 @@ CREATE TABLE counselors (
 );
 
 CREATE TABLE appointments (
-  appointment_id VARCHAR(10) PRIMARY KEY,
+  appointment_id INTEGER PRIMARY KEY,
   student_number VARCHAR(10) NOT NULL,
   counselor_id   VARCHAR(10) NOT NULL,
   scheduled_for  TIMESTAMP NOT NULL,
@@ -36,7 +36,7 @@ CREATE TABLE appointments (
 );
 
 CREATE TABLE feedback (
-  feedback_id    VARCHAR(10) PRIMARY KEY,
+  feedback_id    INTEGER PRIMARY KEY,
   appointment_id VARCHAR(10) NOT NULL,
   rating         SMALLINT NOT NULL,
   comments       VARCHAR(400) NOT NULL,
@@ -44,4 +44,8 @@ CREATE TABLE feedback (
   local_deleted  BOOLEAN NOT NULL,
   CONSTRAINT chk_rating CHECK (rating BETWEEN 1 AND 5),
   FOREIGN KEY(appointment_id) REFERENCES appointments(appointment_id)
+);
+
+CREATE TABLE login (
+  student_number
 );
