@@ -49,7 +49,7 @@ public class RegisterServlet extends HttpServlet {
       int student_number;
 
       try(Connection con = DBConnection.getConnection()) {
-        try(PreparedStatement stmt = con.prepareStatement("INSERT INTO student (name, surname, email, phone, password) VALUES (?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS)) {
+        try(PreparedStatement stmt = con.prepareStatement("INSERT INTO students (name, surname, email, phone, password, role) VALUES (?, ?, ?, ?, ?, 'student')", Statement.RETURN_GENERATED_KEYS)) {
           stmt.setString(1, name);
           stmt.setString(2, surname);
           stmt.setString(3, email);

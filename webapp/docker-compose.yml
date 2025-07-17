@@ -8,6 +8,7 @@ services:
       - DB_USER=${POSTGRES_USER:-postgres}
       - DB_PASS=${POSTGRES_PASSWORD:-password}
       - "CONN_STR=jdbc:postgresql://postgres:5432/postgres"
+      - PGRST_URL=http://postgrest:3000
     labels:
       - "traefik.enable=${ENABLE_TRAEFIK:-false}"
       - "traefik.http.routers.prg381.rule=Host(`${HOST_DOMAIN:-localhost}`)"
@@ -15,6 +16,7 @@ services:
       - "traefik.http.routers.prg381.tls=${TLS:-false}"
       - "traefik.http.routers.prg381.tls.certresolver=${TLS_RESOLVER:-myresolver}"
       - "traefik.http.services.prg381.loadbalancer.server.port=8080"
+
   postgres:
     image: postgres:17
     environment:
@@ -22,6 +24,20 @@ services:
       - POSTGRES_USER=${POSTGRES_USER:-postgres}
     networks:
       - ${NETWORK:-web}
+    volumes:
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  postgrest:
+    image: postgrest/postgrest
+    networks:
+      - ${NETWORK:-web}
+    depends_on:
+      - postgres
+    environment:
+      - "PGRST_DB_URI=postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-password}@postgres:5432/postgres"
+      - PGRST_DB_ANON_ROLE=web_user
+      - PGRST_DB_SCHEMA=public
+      - PGRST_DB_PRE_REQUEST=public.set_request_context
 
 networks:
   web:
