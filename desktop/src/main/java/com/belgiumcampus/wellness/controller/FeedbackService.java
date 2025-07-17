@@ -14,10 +14,10 @@ public class FeedbackService {
      * @param comments The comments.
      * @return The created Feedback object.
      */
-    public Feedback addFeedback(String appointmentId, String studentNumber, int rating, String comments) {
+    public Feedback addFeedback(String feedbackId,String appointmentId, String studentNumber, String rating, String comments) {
         System.out.println("FeedbackService: Attempting to add feedback (API call placeholder)");
         // In the future, this will make an HTTP POST request to your API
-        Feedback newFeedback = Feedback.addFeedback(appointmentId, studentNumber, rating, comments);
+        Feedback newFeedback = Feedback.addFeedback(feedbackId,appointmentId, studentNumber, rating, comments);
         System.out.println("FeedbackService: Feedback added locally - " + newFeedback.getFeedbackId());
         return newFeedback;
     }
@@ -56,7 +56,7 @@ public class FeedbackService {
      * @param newComments New comments.
      * @return true if the feedback was found and updated, false otherwise.
      */
-    public boolean updateFeedback(String feedbackId, int newRating, String newComments) {
+    public boolean updateFeedback(String feedbackId, String newRating, String newComments) {
         System.out.println("FeedbackService: Attempting to update feedback (API call placeholder)");
         // In the future, this will make an HTTP PUT request to your API
         return Feedback.updateFeedback(feedbackId, newRating, newComments);

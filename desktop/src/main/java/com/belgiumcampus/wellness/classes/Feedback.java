@@ -8,13 +8,13 @@ public class Feedback {
     private String feedbackId; // PK
     private String appointmentId; // FK
     private String studentNumber; // FK
-    private int rating; // e.g., 1-5
+    private String rating; // e.g., 1-5
     private String comments;
 
     public static final List<Feedback> AllFeedback = new ArrayList<>();
     private static int nextId = 1;
 
-    public Feedback(String appointmentId, String studentNumber, int rating, String comments) {
+    public Feedback(String appointmentId, String studentNumber, String rating, String comments) {
         this.feedbackId = "F" + String.format("%04d", nextId++);
         this.appointmentId = appointmentId;
         this.studentNumber = studentNumber;
@@ -23,7 +23,7 @@ public class Feedback {
     }
 
     // Constructor for loading from DB
-    public Feedback(String feedbackId, String appointmentId, String studentNumber, int rating, String comments) {
+    public Feedback(String feedbackId, String appointmentId, String studentNumber, String rating, String comments) {
         this.feedbackId = feedbackId;
         this.appointmentId = appointmentId;
         this.studentNumber = studentNumber;
@@ -41,8 +41,8 @@ public class Feedback {
      * @param comments The comments.
      * @return The newly created Feedback object.
      */
-    public static Feedback addFeedback(String appointmentId, String studentNumber, int rating, String comments) {
-        Feedback newFeedback = new Feedback(appointmentId, studentNumber, rating, comments);
+    public static Feedback addFeedback(String feedbackId, String appointmentId, String studentNumber, String rating, String comments) {
+        Feedback newFeedback = new Feedback(feedbackId,appointmentId, studentNumber, rating, comments);
         AllFeedback.add(newFeedback);
         return newFeedback;
     }
@@ -54,7 +54,7 @@ public class Feedback {
      * @param newComments New comments.
      * @return true if the feedback was found and updated, false otherwise.
      */
-    public static boolean updateFeedback(String feedbackId, int newRating, String newComments) {
+    public static boolean updateFeedback(String feedbackId, String newRating, String newComments) {
         for (Feedback feedback : AllFeedback) {
             if (feedback.getFeedbackId().equals(feedbackId)) {
                 feedback.setRating(newRating);
@@ -91,11 +91,11 @@ public class Feedback {
     public String getFeedbackId() { return feedbackId; }
     public String getAppointmentId() { return appointmentId; }
     public String getStudentNumber() { return studentNumber; }
-    public int getRating() { return rating; }
+    public String getRating() { return rating; }
     public String getComments() { return comments; }
 
-    public void setRating(int rating) {
-        if (rating >= 1 && rating <= 5) {
+    public void setRating(String rating) {
+        if (rating.equals("1") || rating.equals("2") || rating.equals("3") || rating.equals("4") || rating.equals("5")) {
             this.rating = rating;
         } else {
             System.err.println("Rating must be between 1 and 5. Rating not updated.");

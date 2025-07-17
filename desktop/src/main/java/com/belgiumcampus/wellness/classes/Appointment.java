@@ -1,7 +1,5 @@
 package com.belgiumcampus.wellness.classes;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -17,14 +15,14 @@ public class Appointment {
     private String appointmentId; // PK
     private String studentNumber; // FK
     private String counselorId;   // FK
-    private LocalDate date;
-    private LocalTime time;
+    private String date;
+    private String time;
     private AppointmentStatus status;
 
     public static final List<Appointment> AllAppointments = new ArrayList<>();
     private static int nextId = 1;
 
-    public Appointment(String studentNumber, String counselorId, LocalDate date, LocalTime time) {
+    public Appointment(String studentNumber, String counselorId, String id, String date, String time) {
         this.appointmentId = "A" + String.format("%04d", nextId++);
         this.studentNumber = studentNumber;
         this.counselorId = counselorId;
@@ -34,7 +32,7 @@ public class Appointment {
     }
 
     // Constructor for loading from DB
-    public Appointment(String appointmentId, String studentNumber, String counselorId, LocalDate date, LocalTime time, AppointmentStatus status) {
+    public Appointment(String appointmentId, String studentNumber, String counselorId, String date, String time, AppointmentStatus status) {
         this.appointmentId = appointmentId;
         this.studentNumber = studentNumber;
         this.counselorId = counselorId;
@@ -53,8 +51,8 @@ public class Appointment {
      * @param time The appointment time.
      * @return The newly created Appointment object.
      */
-    public static Appointment addAppointment(String studentNumber, String counselorId, LocalDate date, LocalTime time) {
-        Appointment newAppointment = new Appointment(studentNumber, counselorId, date, time);
+    public static Appointment addAppointment(String appointmentId,String studentNumber, String counselorId, String date, String time) {
+        Appointment newAppointment = new Appointment(appointmentId, studentNumber, counselorId, date, time);
         AllAppointments.add(newAppointment);
         return newAppointment;
     }
@@ -64,15 +62,13 @@ public class Appointment {
      * @param appointmentId The ID of the appointment to update.
      * @param newDate New date.
      * @param newTime New time.
-     * @param newStatus New status.
      * @return true if the appointment was found and updated, false otherwise.
      */
-    public static boolean updateAppointment(String appointmentId, LocalDate newDate, LocalTime newTime, AppointmentStatus newStatus) {
+    public static boolean updateAppointment(String appointmentId, String newDate, String newTime) {
         for (Appointment appointment : AllAppointments) {
             if (appointment.getAppointmentId().equals(appointmentId)) {
                 appointment.setDate(newDate);
                 appointment.setTime(newTime);
-                appointment.setStatus(newStatus);
                 return true;
             }
         }
@@ -105,12 +101,12 @@ public class Appointment {
     public String getAppointmentId() { return appointmentId; }
     public String getStudentNumber() { return studentNumber; }
     public String getCounselorId() { return counselorId; }
-    public LocalDate getDate() { return date; }
-    public LocalTime getTime() { return time; }
+    public String getDate() { return date; }
+    public String getTime() { return time; }
     public AppointmentStatus getStatus() { return status; }
 
-    public void setDate(LocalDate date) { this.date = date; }
-    public void setTime(LocalTime time) { this.time = time; }
+    public void setDate(String date) { this.date = date; }
+    public void setTime(String time) { this.time = time; }
     public void setStatus(AppointmentStatus status) { this.status = status; }
 
     @Override

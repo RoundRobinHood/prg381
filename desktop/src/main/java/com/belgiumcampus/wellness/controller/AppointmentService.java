@@ -17,10 +17,10 @@ public class AppointmentService {
      * @param time The appointment time.
      * @return The created Appointment object.
      */
-    public Appointment addAppointment(String studentNumber, String counselorId, LocalDate date, LocalTime time) {
+    public Appointment addAppointment(String appointmentID, String studentNumber, String counselorId, String date, String time) {
         System.out.println("AppointmentService: Attempting to add appointment (API call placeholder)");
         // In the future, this will make an HTTP POST request to your API
-        Appointment newAppointment = Appointment.addAppointment(studentNumber, counselorId, date, time);
+        Appointment newAppointment = Appointment.addAppointment(appointmentID,studentNumber, counselorId, date, time);
         System.out.println("AppointmentService: Appointment added locally - " + newAppointment.getAppointmentId());
         return newAppointment;
     }
@@ -60,10 +60,10 @@ public class AppointmentService {
      * @param newStatus New status.
      * @return true if the appointment was found and updated, false otherwise.
      */
-    public boolean updateAppointment(String appointmentId, LocalDate newDate, LocalTime newTime, AppointmentStatus newStatus) {
+    public boolean updateAppointment(String appointmentId, String newDate, String newTime) {
         System.out.println("AppointmentService: Attempting to update appointment (API call placeholder)");
         // In the future, this will make an HTTP PUT request to your API
-        return Appointment.updateAppointment(appointmentId, newDate, newTime, newStatus);
+        return Appointment.updateAppointment(appointmentId, newDate, newTime);
     }
 
     /**
