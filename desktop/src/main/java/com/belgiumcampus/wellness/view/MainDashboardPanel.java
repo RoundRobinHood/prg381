@@ -47,7 +47,9 @@ public class MainDashboardPanel extends JPanel {
     private JTextField UserIDTextBox;
     private JLabel UserPasswordLabel;
     private JTable AppointmentTable;
+    private DefaultTableModel AppointmentTableModel;
     private JTable StudentsTable;
+    private DefaultTableModel StudentsTableModel;
 
     // Components for BookAppointmentTab
     private JLabel HeadingLabel;
@@ -103,7 +105,8 @@ public class MainDashboardPanel extends JPanel {
     private JFormattedTextField AppointmentDateFormatedTextBox;
     private JComboBox AppointmentTimeComboBox;
     private JLabel AppointmentTimeLabel;
-    private JTable table1;
+    private JTable CounselorManagmentTable;
+    private DefaultTableModel CounselorManagmentTableModel;
     private JButton CounselorAddButton;
     private JButton CounselorUpdateButton;
     private JButton CounselorDeleteButton;
@@ -120,6 +123,7 @@ public class MainDashboardPanel extends JPanel {
     private JCheckBox CouselorThursdayCheckBox;
     private JCheckBox CouselorFridayCheckBox;
     private JTable FeedbackTable;
+    private DefaultTableModel FeedbackTableModel;
     private JButton FeedbackUpdateButton;
     private JButton FeedbackDeleteButton;
     private JLabel FeedbackIDLabel;
@@ -148,6 +152,36 @@ public class MainDashboardPanel extends JPanel {
             MyAppointmentsTable.setModel(myAppointmentsTableModel);
             loadAppointmentsData();
         }
+        if (StudentsTable != null) {
+            String[] columnNames = {"UserID", "Name", "Surname", "Email", "Phone Number", "Password", "Role"};
+            StudentsTableModel = new DefaultTableModel(columnNames, 0);
+            StudentsTable.setModel(StudentsTableModel);
+            loadAppointmentsData();
+        }
+        if (MyAppointmentsTable != null) {
+            String[] columnNames = {"Counselor", "Date", "Time", "Status"};
+            AppointmentTableModel = new DefaultTableModel(columnNames, 0);
+            MyAppointmentsTable.setModel(AppointmentTableModel);
+            loadAppointmentsData();
+        }
+        if (AppointmentTable != null) {
+            String[] columnNames = {"AppointmentID", "StudentID", "CounselorID", "Date", "Time"};
+            AppointmentTableModel = new DefaultTableModel(columnNames, 0);
+            AppointmentTable.setModel(AppointmentTableModel);
+            loadAppointmentsData();
+        }
+        if (FeedbackTable != null) {
+            String[] columnNames = {"FeedbackID", "AppointmentID", "StudentID", "Rating"};
+            FeedbackTableModel = new DefaultTableModel(columnNames, 0);
+            FeedbackTable.setModel(FeedbackTableModel);
+            loadAppointmentsData();
+        }
+        if (CounselorManagmentTable != null) {
+            String[] columnNames = {"FeedbackID", "AppointmentID", "StudentID", "Rating"};
+            CounselorManagmentTableModel = new DefaultTableModel(columnNames, 0);
+            CounselorManagmentTable.setModel(CounselorManagmentTableModel);
+            loadAppointmentsData();
+        }
 
         // --- NEW: Initialize JTable's Model and Data for ViewCounselorsTable ---
         if (ViewCounselorsTable != null) {
@@ -157,7 +191,14 @@ public class MainDashboardPanel extends JPanel {
             loadCounselorsData(); // Call the method to load dummy data
         }
         // --- END NEW: ViewCounselorsTable Initialization ---
+        if (CounselorSpecializationComboBox != null) {
+            CounselorSpecializationComboBox.addItem("All Specializations");
+            CounselorSpecializationComboBox.addItem("Depression");
+            CounselorSpecializationComboBox.addItem("Anxiety");
+            CounselorSpecializationComboBox.addItem("Career");
+            CounselorSpecializationComboBox.addItem("Relationships");
 
+        }
 
         // --- Initialize JComboBoxes with dummy data for now ---
         if (CounselorComboBox != null) {
@@ -166,12 +207,36 @@ public class MainDashboardPanel extends JPanel {
             CounselorComboBox.addItem("Ms. Sarah Jones");
             CounselorComboBox.addItem("Mr. Chris Lee");
         }
+        if (AppointmentTimeComboBox != null) {
+            AppointmentTimeComboBox.addItem("Select Time");
+            AppointmentTimeComboBox.addItem("09:00 AM");
+            AppointmentTimeComboBox.addItem("10:00 AM");
+            AppointmentTimeComboBox.addItem("11:00 AM");
+            AppointmentTimeComboBox.addItem("02:00 PM");
+            AppointmentTimeComboBox.addItem("03:00 PM");
+            AppointmentTimeComboBox.addItem("04:00 PM");
+        }
+        if (UserRoleComboBox != null) {
+            UserRoleComboBox.addItem("Select User");
+            UserRoleComboBox.addItem("Student");
+            UserRoleComboBox.addItem("Admin");
+        }
+        if (FeedbackRatingComboBox != null) {
+            FeedbackRatingComboBox.addItem("Select Rating");
+            FeedbackRatingComboBox.addItem("1");
+            FeedbackRatingComboBox.addItem("2");
+            FeedbackRatingComboBox.addItem("3");
+            FeedbackRatingComboBox.addItem("4");
+            FeedbackRatingComboBox.addItem("5");
+        }
         if (TimeComboBox != null) {
             TimeComboBox.addItem("Select Time");
             TimeComboBox.addItem("09:00 AM");
             TimeComboBox.addItem("10:00 AM");
             TimeComboBox.addItem("11:00 AM");
             TimeComboBox.addItem("02:00 PM");
+            TimeComboBox.addItem("03:00 PM");
+            TimeComboBox.addItem("04:00 PM");
         }
         // --- NEW: Initialize FilterByComboBox for View Counselors Tab ---
         if (FilterByComboBox != null) {
@@ -214,7 +279,7 @@ public class MainDashboardPanel extends JPanel {
                 if (userID.isEmpty() || name.isEmpty() || surname.isEmpty() || email.isEmpty() ||
                         phone.isEmpty() || password.isEmpty() || role == null) {
                     JOptionPane.showMessageDialog(null, "Please fill in all fields.");
-                }else {
+                } else {
                     JOptionPane.showMessageDialog(null,
                             "User Added:\nID: " + userID +
                                     "\nName: " + name +
@@ -379,7 +444,7 @@ public class MainDashboardPanel extends JPanel {
                 String feedbackID = FedbackIDTextBox.getText().trim();
                 String appointmentID = FeedbackAppointIDTextBox.getText().trim();
                 String studentNumber = FeedbackStudentNumberTextBox.getText().trim();
-                String rating = (String)FeedbackRatingComboBox.getSelectedItem();
+                String rating = (String) FeedbackRatingComboBox.getSelectedItem();
                 String comment = FeedbackCommentTextArea.getText().trim();
                 if (feedbackID.isEmpty() || appointmentID.isEmpty() || studentNumber.isEmpty() || rating == null || comment.isEmpty()) {
                     JOptionPane.showMessageDialog(null, "Please fill in all fields.");
@@ -440,6 +505,7 @@ public class MainDashboardPanel extends JPanel {
             }
         });
     }
+
     private void clearFeedbackFields() {
         FedbackIDTextBox.setText("");
         FeedbackAppointIDTextBox.setText("");
@@ -447,6 +513,7 @@ public class MainDashboardPanel extends JPanel {
         FeedbackRatingComboBox.setSelectedIndex(0);
         FeedbackCommentTextArea.setText("");
     }
+
     private void clearUserFields() {
         UserIDTextBox.setText("");
         UserNameTextBox.setText("");
@@ -456,6 +523,7 @@ public class MainDashboardPanel extends JPanel {
         UserPasswordField.setText("");
         UserRoleComboBox.setSelectedIndex(0);
     }
+
     private void clearFields() {
         AppointmentIDTextBox.setText("");
         AppointmentStudentIDTextBox.setText("");
@@ -463,7 +531,8 @@ public class MainDashboardPanel extends JPanel {
         AppointmentDateFormatedTextBox.setText("");
         AppointmentTimeComboBox.setSelectedIndex(0); // Resets to first item in combo box
     }
-// add counselor
+
+    // add counselor
     private void addCounselor() {
         String name = CounselorNameTextBox.getText().trim();
         String specialization = (String) CounselorSpecializationComboBox.getSelectedItem();
@@ -489,7 +558,8 @@ public class MainDashboardPanel extends JPanel {
         System.out.println("Counselor Added: " + name + ", " + specialization + ", " + availabilityStr);
         JOptionPane.showMessageDialog(null, "Counselor added successfully!");
     }
-// update Counselor
+
+    // update Counselor
     private void updateCounselor() {
         String idText = CounselorIDTextBox.getText().trim();
         if (idText.isEmpty()) {
@@ -523,7 +593,8 @@ public class MainDashboardPanel extends JPanel {
         System.out.println("Update Counselor: ID=" + counselorId + ", " + name + ", " + specialization + ", " + availabilityStr);
         JOptionPane.showMessageDialog(null, "Counselor updated successfully!");
     }
-// delete Counselor
+
+    // delete Counselor
     private void deleteCounselor() {
         String idText = CounselorIDTextBox.getText().trim();
         int counselorId;
@@ -729,8 +800,8 @@ public class MainDashboardPanel extends JPanel {
         HomeTabbedPanel.addTab("Counselor Management", CounselorManagementTab);
         final JScrollPane scrollPane3 = new JScrollPane();
         CounselorManagementTab.add(scrollPane3, new GridConstraints(0, 0, 17, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
-        table1 = new JTable();
-        scrollPane3.setViewportView(table1);
+        CounselorManagmentTable = new JTable();
+        scrollPane3.setViewportView(CounselorManagmentTable);
         CounselorAddButton = new JButton();
         CounselorAddButton.setText("Add Counselor");
         CounselorManagementTab.add(CounselorAddButton, new GridConstraints(13, 1, 3, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
