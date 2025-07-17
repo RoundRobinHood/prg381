@@ -1,9 +1,6 @@
 package com.belgiumcampus.wellness.view;
 
-import com.belgiumcampus.wellness.classes.Admin;
-import com.belgiumcampus.wellness.classes.Appointment;
-import com.belgiumcampus.wellness.classes.Feedback;
-import com.belgiumcampus.wellness.classes.Student;
+import com.belgiumcampus.wellness.classes.*;
 import com.belgiumcampus.wellness.util.UserRole;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
@@ -19,7 +16,6 @@ import java.awt.print.PrinterException;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.text.MessageFormat;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -60,6 +56,7 @@ public class MainDashboardPanel extends JPanel {
     private DefaultTableModel AppointmentTableModel;
     private JTable StudentsTable;
     private DefaultTableModel StudentsTableModel;
+    private JTextPane BCStudentWellnessManagementTextPane;
 
     // Components for BookAppointmentTab
     private JLabel HeadingLabel;
@@ -498,10 +495,10 @@ public class MainDashboardPanel extends JPanel {
                                     "\nPhone: " + phone +
                                     "\nRole: " + role);
                     clearUserFields();
-                    if (role == "Student"){
+                    if (role == "Student") {
                         Student.addStudent(userID, name, surname, email, phone, password);
                     }
-                    if (role == "Admin"){
+                    if (role == "Admin") {
                         Admin.addAdmin(userID, name, surname, email, phone, password);
                     }
                     updateUserTable();
@@ -546,7 +543,7 @@ public class MainDashboardPanel extends JPanel {
                                     "\nTime: " + time);
 
                     clearFields();
-                    Appointment.addAppointment(appointmentID,studentID,counselorID,date,time);
+                    Appointment.addAppointment(appointmentID, studentID, counselorID, date, time);
                     updateAppointmentsTable();
                 }
             }
@@ -573,7 +570,7 @@ public class MainDashboardPanel extends JPanel {
                 JOptionPane.showMessageDialog(null, "Appointment updated successfully!");
 
                 clearFields();
-                Appointment.updateAppointment(appointmentId,date,time);
+                Appointment.updateAppointment(appointmentId, date, time);
                 updateAppointmentsTable();
 
             }
@@ -582,7 +579,52 @@ public class MainDashboardPanel extends JPanel {
         CounselorAddButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                addCounselor();
+
+                String counselorID = CounselorIDTextBox.getText();
+                String counselorName = CounselorNameTextBox.getText();
+                String counselorSpecialization = (String) CounselorSpecializationComboBox.getSelectedItem();
+                List<String> selectedDays = new ArrayList<>();
+
+                if (CouselorMondayCheckBox.isSelected()) {
+                    selectedDays.add("Monday");
+                }
+                if (CounselorTuesdayCheckBox.isSelected()) {
+                    selectedDays.add("Tuesday");
+                }
+                if (CounselorWednessdayCheckBox.isSelected()) {
+                    selectedDays.add("Wednesday");
+                }
+                if (CouselorThursdayCheckBox.isSelected()) {
+                    selectedDays.add("Thursday");
+                }
+                if (CouselorFridayCheckBox.isSelected()) {
+                    selectedDays.add("Friday");
+                }
+
+                // Join the selected days into a comma-separated string
+                // This is the most concise way in Java 8+
+                String availableDaysString = String.join(", ", selectedDays);
+                if (counselorID.isEmpty() ||
+                        counselorName.isEmpty() ||
+                        counselorSpecialization == null ||
+                        counselorSpecialization.isEmpty() ||
+                        availableDaysString.isEmpty()) {
+
+                    JOptionPane.showMessageDialog(null, "Please fill in all fields and select at least one available day.", "Validation Error", JOptionPane.WARNING_MESSAGE);
+                } else {
+                    // --- Success Logic ---
+                    JOptionPane.showMessageDialog(null,
+                            "Counselor Added:\n" +
+                                    "ID: " + counselorID +
+                                    "\nName: " + counselorName +
+                                    "\nSpecialization: " + counselorSpecialization +
+                                    "\nAvailability: " + availableDaysString,
+                            "Counselor Added Successfully", JOptionPane.INFORMATION_MESSAGE);
+
+                    clearFields();
+                    Counsellor.addCounsellor(counselorName, counselorSpecialization, availableDaysString);
+                    updateCounselorTable();
+                }
             }
         });
         //delete appointment button
@@ -637,10 +679,10 @@ public class MainDashboardPanel extends JPanel {
                                     "\nPhone: " + phone +
                                     "\nRole: " + role);
                     clearUserFields();
-                    if (role == "Student"){
+                    if (role == "Student") {
                         Student.updateStudent(userID, name, surname, email, phone, password);
                     }
-                    if (role =="Admin"){
+                    if (role == "Admin") {
                         Admin.updateAdmin(userID, name, surname, email, phone, password);
                     }
                     updateUserTable();
@@ -659,10 +701,10 @@ public class MainDashboardPanel extends JPanel {
                 } else {
                     JOptionPane.showMessageDialog(null, "User with ID " + userID + " deleted.");
                     clearUserFields();
-                    if (Objects.equals(userRole, "Student")){
+                    if (Objects.equals(userRole, "Student")) {
                         Student.deleteStudent(userID);
                     }
-                    if (Objects.equals(userRole, "Admin")){
+                    if (Objects.equals(userRole, "Admin")) {
                         Admin.deleteAdmin(userID);
                     }
                     updateUserTable();
@@ -688,7 +730,7 @@ public class MainDashboardPanel extends JPanel {
                                     "\nRating: " + rating +
                                     "\nComment: " + comment);
                     clearFeedbackFields();
-                    Feedback.addFeedback(feedbackID,appointmentID,studentNumber,rating,comment);
+                    Feedback.addFeedback(feedbackID, appointmentID, studentNumber, rating, comment);
                     updateFeedbackTable();
                 }
             }
@@ -719,7 +761,7 @@ public class MainDashboardPanel extends JPanel {
                                     "\nRating: " + rating +
                                     "\nComment: " + comment);
                     clearFeedbackFields();
-                    Feedback.updateFeedback(feedbackID,rating,comment);
+                    Feedback.updateFeedback(feedbackID, rating, comment);
                     updateFeedbackTable();
                 }
             }
@@ -742,11 +784,27 @@ public class MainDashboardPanel extends JPanel {
         });
     }
 
+    private void updateCounselorTable() {
+        if (CounselorManagmentTableModel != null) {
+            CounselorManagmentTableModel.setRowCount(0);
+
+            for (Counsellor counsellor : Counsellor.AllCounsellors) {
+                Object[] rowData = {
+                        counsellor.getCounselorId(),
+                        counsellor.getName(),
+                        counsellor.getSpecialization(),
+                        counsellor.getAvailability()
+                };
+                CounselorManagmentTableModel.addRow(rowData);
+            }
+        }
+    }
+
     private void updateFeedbackTable() {
-        if (FeedbackTableModel != null){
+        if (FeedbackTableModel != null) {
             FeedbackTableModel.setRowCount(0);
 
-            for (Feedback feedback : Feedback.AllFeedback){
+            for (Feedback feedback : Feedback.AllFeedback) {
                 Object[] rowData = {
                         feedback.getFeedbackId(),
                         feedback.getAppointmentId(),
@@ -759,11 +817,11 @@ public class MainDashboardPanel extends JPanel {
         }
     }
 
-    private void updateAppointmentsTable(){
-        if (AppointmentTableModel != null){
+    private void updateAppointmentsTable() {
+        if (AppointmentTableModel != null) {
             AppointmentTableModel.setRowCount(0);
 
-            for (Appointment appointment : Appointment.AllAppointments){
+            for (Appointment appointment : Appointment.AllAppointments) {
                 Object[] rowData = {
                         appointment.getAppointmentId(),
                         appointment.getStudentNumber(),
@@ -776,8 +834,9 @@ public class MainDashboardPanel extends JPanel {
             }
         }
     }
+
     private void updateUserTable() {
-        if (StudentsTableModel != null){
+        if (StudentsTableModel != null) {
             StudentsTableModel.setRowCount(0);
 
             for (Admin admin : Admin.AllAdmins) {
@@ -791,7 +850,7 @@ public class MainDashboardPanel extends JPanel {
                 };
                 StudentsTableModel.addRow(rowData);
             }
-            for (Student student : Student.AllStudents){
+            for (Student student : Student.AllStudents) {
                 Object[] rowData = {
                         student.getStudentNumber(),
                         student.getName(),
@@ -1179,6 +1238,9 @@ public class MainDashboardPanel extends JPanel {
         HomeTab.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
         HomeTab.putClientProperty("html.disable", Boolean.FALSE);
         HomeTabbedPanel.addTab("Home", HomeTab);
+        BCStudentWellnessManagementTextPane = new JTextPane();
+        BCStudentWellnessManagementTextPane.setText("BC Student Wellness Management System - Welcome Home\nMain Welcome:\n\"Welcome to the BC Student Wellness Management System! Your dedicated desktop application for managing student wellness services.\"\n\nApplication Purpose:\n\"This system is designed to provide comprehensive tools for both students and administrators to seamlessly interact with and manage various wellness services offered by Belgium Campus. Whether you're booking an appointment, managing counsellor details, or providing valuable feedback, this application streamlines the entire process.\"\n\nKey Features Overview:\n\nAppointments:\n\n\"Effortlessly book, view, reschedule, and cancel student appointments with qualified counsellors. Stay organized with a clear overview of all upcoming sessions.\"\n\nCounsellors:\n\n\"Manage your team of wellness counsellors. Add new specialists, update their details and availability, and maintain an up-to-date roster of support staff.\"\n\nFeedback:\n\n\"Collect and review essential student feedback. Submit ratings and comments on wellness services, and track feedback history to continuously improve support.\"\n\nHow to Use This Application:\n\"Navigate through the different sections using the tabs or menu options provided above or on the side. Each section is designed to be intuitive, allowing you to quickly access and manage the specific wellness services you need.\"\n\nClosing Message:\n\"We are committed to supporting your well-being. Thank you for using the BC Student Wellness Management System – empowering a healthier campus community.\"");
+        HomeTab.add(BCStudentWellnessManagementTextPane, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_WANT_GROW, null, new Dimension(150, 50), null, 0, false));
         StudentManagementTab = new JPanel();
         StudentManagementTab.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
         HomeTabbedPanel.addTab("User Management", StudentManagementTab);

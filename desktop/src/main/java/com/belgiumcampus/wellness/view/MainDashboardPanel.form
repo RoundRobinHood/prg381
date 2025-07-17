@@ -3,7 +3,7 @@
   <grid id="27dc6" binding="MainPanel" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
     <margin top="0" left="0" bottom="0" right="0"/>
     <constraints>
-      <xy x="20" y="20" width="710" height="890"/>
+      <xy x="20" y="20" width="9768" height="890"/>
     </constraints>
     <properties/>
     <border type="none"/>
@@ -27,7 +27,18 @@
               <html.disable class="java.lang.Boolean" value="false"/>
             </clientProperties>
             <border type="none"/>
-            <children/>
+            <children>
+              <component id="2ff3b" class="javax.swing.JTextPane" binding="BCStudentWellnessManagementTextPane" default-binding="true">
+                <constraints>
+                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
+                    <preferred-size width="150" height="50"/>
+                  </grid>
+                </constraints>
+                <properties>
+                  <text value="BC Student Wellness Management System - Welcome Home&#10;Main Welcome:&#10;&quot;Welcome to the BC Student Wellness Management System! Your dedicated desktop application for managing student wellness services.&quot;&#10;&#10;Application Purpose:&#10;&quot;This system is designed to provide comprehensive tools for both students and administrators to seamlessly interact with and manage various wellness services offered by Belgium Campus. Whether you're booking an appointment, managing counsellor details, or providing valuable feedback, this application streamlines the entire process.&quot;&#10;&#10;Key Features Overview:&#10;&#10;Appointments:&#10;&#10;&quot;Effortlessly book, view, reschedule, and cancel student appointments with qualified counsellors. Stay organized with a clear overview of all upcoming sessions.&quot;&#10;&#10;Counsellors:&#10;&#10;&quot;Manage your team of wellness counsellors. Add new specialists, update their details and availability, and maintain an up-to-date roster of support staff.&quot;&#10;&#10;Feedback:&#10;&#10;&quot;Collect and review essential student feedback. Submit ratings and comments on wellness services, and track feedback history to continuously improve support.&quot;&#10;&#10;How to Use This Application:&#10;&quot;Navigate through the different sections using the tabs or menu options provided above or on the side. Each section is designed to be intuitive, allowing you to quickly access and manage the specific wellness services you need.&quot;&#10;&#10;Closing Message:&#10;&quot;We are committed to supporting your well-being. Thank you for using the BC Student Wellness Management System – empowering a healthier campus community.&quot;"/>
+                </properties>
+              </component>
+            </children>
           </grid>
           <grid id="a61fd" binding="StudentManagementTab" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
             <margin top="0" left="0" bottom="0" right="0"/>
