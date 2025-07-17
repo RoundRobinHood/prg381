@@ -1,6 +1,8 @@
 package com.belgiumcampus.wellness.view;
 
 import com.belgiumcampus.wellness.classes.Admin;
+import com.belgiumcampus.wellness.classes.Appointment;
+import com.belgiumcampus.wellness.classes.Feedback;
 import com.belgiumcampus.wellness.classes.Student;
 import com.belgiumcampus.wellness.util.UserRole;
 import com.intellij.uiDesigner.core.GridConstraints;
@@ -17,9 +19,11 @@ import java.awt.print.PrinterException;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.text.MessageFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 public class MainDashboardPanel extends JPanel {
@@ -178,7 +182,7 @@ public class MainDashboardPanel extends JPanel {
             loadAppointmentsData();
         }
         if (FeedbackTable != null) {
-            String[] columnNames = {"FeedbackID", "AppointmentID", "StudentID", "Rating"};
+            String[] columnNames = {"FeedbackID", "AppointmentID", "StudentID", "Rating", "Comment"};
             FeedbackTableModel = new DefaultTableModel(columnNames, 0);
             FeedbackTable.setModel(FeedbackTableModel);
             loadAppointmentsData();
@@ -528,7 +532,7 @@ public class MainDashboardPanel extends JPanel {
                 String appointmentID = AppointmentIDTextBox.getText().trim();
                 String studentID = AppointmentStudentIDTextBox.getText().trim();
                 String counselorID = AppointmentCounselorIDTextBox.getText().trim();
-                String date = AppointmentDateFormatedTextBox.getText().trim();
+                String date = (String) AppointmentDateFormatedTextBox.getText().trim();
                 String time = (String) AppointmentTimeComboBox.getSelectedItem();
 
                 if (appointmentID.isEmpty() || counselorID.isEmpty() || studentID.isEmpty() || date.isEmpty() || time == null) {
@@ -542,8 +546,8 @@ public class MainDashboardPanel extends JPanel {
                                     "\nTime: " + time);
 
                     clearFields();
-
-
+                    Appointment.addAppointment(appointmentID,studentID,counselorID,date,time);
+                    updateAppointmentsTable();
                 }
             }
 
@@ -569,6 +573,8 @@ public class MainDashboardPanel extends JPanel {
                 JOptionPane.showMessageDialog(null, "Appointment updated successfully!");
 
                 clearFields();
+                Appointment.updateAppointment(appointmentId,date,time);
+                updateAppointmentsTable();
 
             }
         });
@@ -646,12 +652,20 @@ public class MainDashboardPanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String userID = UserIDTextBox.getText().trim();
+                String userRole = UserRoleComboBox.getSelectedItem().toString();
 
                 if (userID.isEmpty()) {
                     JOptionPane.showMessageDialog(null, "Please enter User ID to delete.");
                 } else {
                     JOptionPane.showMessageDialog(null, "User with ID " + userID + " deleted.");
                     clearUserFields();
+                    if (Objects.equals(userRole, "Student")){
+                        Student.deleteStudent(userID);
+                    }
+                    if (Objects.equals(userRole, "Admin")){
+                        Admin.deleteAdmin(userID);
+                    }
+                    updateUserTable();
                 }
             }
         });
@@ -674,7 +688,8 @@ public class MainDashboardPanel extends JPanel {
                                     "\nRating: " + rating +
                                     "\nComment: " + comment);
                     clearFeedbackFields();
-
+                    Feedback.addFeedback(feedbackID,appointmentID,studentNumber,rating,comment);
+                    updateFeedbackTable();
                 }
             }
         });
@@ -694,7 +709,7 @@ public class MainDashboardPanel extends JPanel {
                 String rating = (String) FeedbackRatingComboBox.getSelectedItem();
                 String comment = FeedbackCommentTextArea.getText().trim();
 
-                if (appointmentID.isEmpty() || studentNumber.isEmpty() || rating == null || comment.isEmpty()) {
+                if (feedbackID.isEmpty() || rating == null || comment.isEmpty()) {
                     JOptionPane.showMessageDialog(null, "Please fill in all fields.");
                 } else {
                     JOptionPane.showMessageDialog(null,
@@ -704,7 +719,8 @@ public class MainDashboardPanel extends JPanel {
                                     "\nRating: " + rating +
                                     "\nComment: " + comment);
                     clearFeedbackFields();
-
+                    Feedback.updateFeedback(feedbackID,rating,comment);
+                    updateFeedbackTable();
                 }
             }
         });
@@ -719,11 +735,47 @@ public class MainDashboardPanel extends JPanel {
                 } else {
                     JOptionPane.showMessageDialog(null, "Feedback with ID " + feedbackID + " deleted.");
                     clearFeedbackFields();
+                    Feedback.deleteFeedback(feedbackID);
+                    updateFeedbackTable();
                 }
             }
         });
     }
 
+    private void updateFeedbackTable() {
+        if (FeedbackTableModel != null){
+            FeedbackTableModel.setRowCount(0);
+
+            for (Feedback feedback : Feedback.AllFeedback){
+                Object[] rowData = {
+                        feedback.getFeedbackId(),
+                        feedback.getAppointmentId(),
+                        feedback.getStudentNumber(),
+                        feedback.getRating(),
+                        feedback.getComments()
+                };
+                FeedbackTableModel.addRow(rowData);
+            }
+        }
+    }
+
+    private void updateAppointmentsTable(){
+        if (AppointmentTableModel != null){
+            AppointmentTableModel.setRowCount(0);
+
+            for (Appointment appointment : Appointment.AllAppointments){
+                Object[] rowData = {
+                        appointment.getAppointmentId(),
+                        appointment.getStudentNumber(),
+                        appointment.getCounselorId(),
+                        appointment.getDate(),
+                        appointment.getTime(),
+                        appointment.getStatus()
+                };
+                AppointmentTableModel.addRow(rowData);
+            }
+        }
+    }
     private void updateUserTable() {
         if (StudentsTableModel != null){
             StudentsTableModel.setRowCount(0);
