@@ -64,13 +64,13 @@ public class Admin extends User {
 
     /**
      * Deletes an admin from the AllAdmins list.
-     * @param email The email of the admin to delete.
+     * @param adminID The email of the admin to delete.
      * @return true if the admin was found and deleted, false otherwise.
      */
-    public static boolean deleteAdmin(String email) {
+    public static boolean deleteAdmin(String adminID) {
         Admin adminToRemove = null;
         for (Admin admin : AllAdmins) {
-            if (admin.getEmail().equals(email)) {
+            if (admin.getAdminID().equals(adminID)) {
                 adminToRemove = admin;
                 break;
             }
@@ -79,7 +79,7 @@ public class Admin extends User {
             AllAdmins.remove(adminToRemove);
             return true;
         }
-        System.err.println("Error: Admin with email " + email + " not found for deletion.");
+        System.err.println("Error: Admin with ID " + adminID + " not found for deletion.");
         return false;
     }
 
