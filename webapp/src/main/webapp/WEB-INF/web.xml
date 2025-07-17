@@ -21,6 +21,11 @@
     </servlet>
 
     <servlet>
+      <servlet-name>LogoutServlet</servlet-name>
+      <servlet-class>com.roundrobinhood.webapp.LogoutServlet</servlet-class>
+    </servlet>
+
+    <servlet>
       <servlet-name>APIServlet</servlet-name>
       <servlet-class>com.roundrobinhood.webapp.APIServlet</servlet-class>
     </servlet>
@@ -43,6 +48,11 @@
     <servlet-mapping>
       <servlet-name>DashboardServlet</servlet-name>
       <url-pattern>/dashboard</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+      <servlet-name>LogoutServlet</servlet-name>
+      <url-pattern>/logout</url-pattern>
     </servlet-mapping>
 
     <servlet-mapping>

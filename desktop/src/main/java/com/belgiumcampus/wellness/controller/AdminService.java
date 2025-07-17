@@ -43,10 +43,10 @@ public class AdminService {
           stmt.setString(5, phone);
           stmt.setString(6, BCrypt.hashpw(password, BCrypt.gensalt()));
           stmt.executeUpdate();
+
+          return new Admin("" + newId, name, surname, email, phone, null);
         }
       }
-      Admin newAdmin = Admin.addAdmin(name, surname, email, phone, password);
-      return newAdmin;
     }
 
     /**
@@ -65,10 +65,11 @@ public class AdminService {
             if(!rs.next())
               return null;
             else {
+              String adminId = "" + rs.getInt("student_number");
               String name = rs.getString("name");
               String surname = rs.getString("surname");
               String phone = rs.getString("phone");
-              return new Admin(name, surname, email, phone, null);
+              return new Admin(adminId, name, surname, email, phone, null);
             }
           }
         }
@@ -85,11 +86,12 @@ public class AdminService {
           try(Statement stmt = connection.createStatement()) {
             try(ResultSet rs = stmt.executeQuery("SELECT * FROM students WHERE role = 'admin' AND NOT local_deleted;")) {
               while(rs.next()) {
+                String adminId = "" + rs.getInt("student_number");
                 String name = rs.getString("name");
                 String surname = rs.getString("surname");
                 String email = rs.getString("email");
                 String phone = rs.getString("phone");
-                admins.add(new Admin(name, surname, email, phone, null));
+                admins.add(new Admin(adminId, name, surname, email, phone, null));
               }
             }
           }

@@ -1,6 +1,132 @@
+/* --- Common Styling for BC Wellness Web App --- */
+
+/* 1. Color Palette */
+:root {
+  --background-color-primary: #F9F7F1;
+  --background-color-secondary: #FAF3E0;
+  --accent-color-primary: #6B8E23;
+  --accent-color-hover: #5D7B1B;
+  --text-color-primary: #333333;
+  --text-color-secondary: #666666;
+  --border-color: rgba(0, 0, 0, 0.1);
+  --shadow-color: rgba(0, 0, 0, 0.08);
+}
+
+/* Base styles for all elements */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  color-scheme: light dark;
+}
+
+/* Apply base colors to body and common font families */
+body {
+  background-color: var(--background-color-primary);
+  color: var(--text-color-primary);
+  font-family: 'Open Sans', sans-serif;
+}
+
+/* Font Consistency for headings and body text */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Poppins', sans-serif;
+  color: var(--text-color-primary);
+}
+p, ul, li, label, input, select, textarea {
+  font-family: 'Lato', sans-serif;
+  color: var(--text-color-secondary);
+}
+
+/* Common Layout: Centering box */
+.box {
+  display: flex;
+  width: 100vw;
+  min-height: 100vh;
+  align-items: center;
+  justify-content: center;
+  overflow-y: auto;
+  padding: 2rem;
+  box-sizing: border-box;
+}
+
+/* Common Container for forms/dashboard content */
+.container {
+  background-color: var(--background-color-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 2.5rem 3.5rem;
+  text-align: center;
+  width: 90%;
+  box-shadow: 0 4px 12px var(--shadow-color);
+  z-index: 1;
+  position: relative;
+}
+
+/* Common styling for form inputs */
+form input[type="email"],
+form input[type="password"],
+form input[type="text"],
+form input[type="tel"] {
+  padding: 0.7rem 1rem;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  font-size: 1rem;
+  background-color: white;
+  color: var(--text-color-primary);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+form input[type="email"]:focus,
+form input[type="password"]:focus,
+form input[type="text"]:focus,
+form input[type="tel"]:focus {
+  outline: none;
+  border-color: var(--accent-color-primary);
+  box-shadow: 0 0 0 3px rgba(107, 142, 35, 0.2);
+}
+
+/* Common styling for submit buttons */
+form input[type=submit],
+.container a {
+  padding: 1rem 2.5rem;
+  font-size: 1.1rem;
+  cursor: pointer;
+  border-radius: 12px;
+  border: none;
+  background-color: var(--accent-color-primary);
+  color: white;
+  transition: background-color 0.3s ease, transform 0.1s ease, box-shadow 0.3s ease;
+  text-transform: uppercase;
+  font-weight: bold;
+  box-shadow: 0 4px 8px var(--shadow-color);
+}
+form input[type=submit]:hover,
+.container a:hover {
+  background-color: var(--accent-color-hover);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+}
+form input[type=submit]:active,
+.container a:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px var(--shadow-color);
+}
+
+/* Common error message styling */
+.error {
+  background-color: #FFEBEE;
+  color: #D32F2F;
+  text-align: center;
+  display: block;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  border: 1px solid #EF9A9A;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+/* Common Horizontal Rule styling */
+hr {
+  border: 0;
+  height: 1px;
+  background-color: var(--border-color);
 }

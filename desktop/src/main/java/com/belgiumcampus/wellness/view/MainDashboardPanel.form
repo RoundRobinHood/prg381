@@ -348,7 +348,7 @@
                 <properties/>
                 <border type="none"/>
                 <children>
-                  <component id="8df32" class="javax.swing.JTable" binding="table1" default-binding="true">
+                  <component id="8df32" class="javax.swing.JTable" binding="CounselorManagmentTable">
                     <constraints/>
                     <properties/>
                   </component>
@@ -670,7 +670,9 @@
                     <preferred-size width="150" height="-1"/>
                   </grid>
                 </constraints>
-                <properties/>
+                <properties>
+                  <text value=""/>
+                </properties>
               </component>
               <component id="d1d41" class="javax.swing.JComboBox" binding="TimeComboBox">
                 <constraints>
