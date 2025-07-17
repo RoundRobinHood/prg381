@@ -28,6 +28,13 @@ public class Config {
       httpSecure = System.getenv("HTTP_SECURE") != null && System.getenv("HTTP_SECURE").equalsIgnoreCase("true");
     }
 
-    return httpSecure.booleanValue();
+    return httpSecure;
+  }
+  private static String postGrestURL;
+  public static String getPostGrestURL() {
+    if(postGrestURL == null) {
+      postGrestURL = System.getenv("PGRST_URL");
+    }
+    return postGrestURL;
   }
 }
