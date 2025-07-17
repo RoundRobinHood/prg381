@@ -22,6 +22,8 @@ import jakarta.servlet.http.HttpServletResponse;
 public class SessionStorage {
   public static Session GetSession(HttpServletRequest req, HttpServletResponse resp) throws SQLException {
     String sessid = null;
+
+    // First, check if they have a cookie set (website auth)
     if(req.getCookies() != null)
     for(Cookie cookie: req.getCookies()) {
       if(cookie.getName().equals("sessid")) {
@@ -29,6 +31,15 @@ public class SessionStorage {
         break;
       }
     }
+
+    // Fallback to Authorization header (desktop auth)
+    if(sessid == null) {
+      String authHeader = req.getHeader("Authorization");
+      if (authHeader != null && authHeader.startsWith("Bearer ")) {
+        sessid = authHeader.substring("Bearer ".length());
+      }
+    }
+
     if(sessid == null) {
       Session session = NewSession((Integer)null);
       resp.addCookie(CreateCookie(session));
