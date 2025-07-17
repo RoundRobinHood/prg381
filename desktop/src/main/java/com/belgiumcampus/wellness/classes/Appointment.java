@@ -24,6 +24,32 @@ public class Appointment {
     public static final List<Appointment> AllAppointments = new ArrayList<>();
     private static int nextId = 1;
 
+    public static AppointmentStatus statusFromString(String status) {
+      switch(status) {
+        case "scheduled":
+          return AppointmentStatus.SCHEDULED;
+        case "completed":
+          return AppointmentStatus.COMPLETED;
+        case "cancelled":
+          return AppointmentStatus.CANCELLED;
+        default:
+          return null;
+      }
+    }
+
+    public static String statusToString(AppointmentStatus status) {
+      switch(status) {
+        case AppointmentStatus.SCHEDULED:
+          return "scheduled";
+        case AppointmentStatus.COMPLETED:
+          return "completed";
+        case AppointmentStatus.CANCELLED:
+          return "cancelled";
+        default:
+          return null;
+      }
+    }
+
     public Appointment(String studentNumber, String counselorId, LocalDate date, LocalTime time) {
         this.appointmentId = "A" + String.format("%04d", nextId++);
         this.studentNumber = studentNumber;

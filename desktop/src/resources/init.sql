@@ -15,11 +15,10 @@ CREATE TABLE students (
 CREATE TABLE counselors (
   counselor_id   INTEGER PRIMARY KEY,
   name           VARCHAR(70) NOT NULL,
-  specialization VARCHAR(10) NOT NULL,
-  availability   VARCHAR(7) NOT NULL,
+  specialization VARCHAR(30) NOT NULL,
+  availability   VARCHAR(50) NOT NULL,
   local_modified BOOLEAN NOT NULL,
   local_deleted  BOOLEAN NOT NULL,
-  CONSTRAINT chk_specialization CHECK (specialization IN ('tutoring', 'mental health'))
 );
 
 CREATE TABLE appointments (
