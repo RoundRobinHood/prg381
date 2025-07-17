@@ -1,9 +1,7 @@
 package com.belgiumcampus.wellness.view;
 
-import com.belgiumcampus.wellness.classes.Admin;
-import com.belgiumcampus.wellness.classes.Appointment;
-import com.belgiumcampus.wellness.classes.Feedback;
-import com.belgiumcampus.wellness.classes.Student;
+import com.belgiumcampus.wellness.classes.*;
+import com.belgiumcampus.wellness.controller.*;
 import com.belgiumcampus.wellness.util.UserRole;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
@@ -18,8 +16,10 @@ import java.awt.event.ActionListener;
 import java.awt.print.PrinterException;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import java.sql.SQLException;
 import java.text.MessageFormat;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -156,6 +156,12 @@ public class MainDashboardPanel extends JPanel {
         $$$setupUI$$$();
         this.currentUserRole = role;
         setupFeedbackRadioButtonGroup();
+
+        FeedbackService feedbackService =  new FeedbackService();
+        AppointmentService appointmentService =  new AppointmentService();
+        CounsellorService counsellorService =  new CounsellorService();
+        AdminService adminService =  new AdminService();
+        StudentService studentService =  new StudentService();
 
         // --- Initialize JTable's Model and Data for MyAppointmentsTable ---
         if (MyAppointmentsTable != null) {
@@ -498,13 +504,17 @@ public class MainDashboardPanel extends JPanel {
                                     "\nPhone: " + phone +
                                     "\nRole: " + role);
                     clearUserFields();
-                    if (role == "Student"){
-                        Student.addStudent(userID, name, surname, email, phone, password);
+                    try {
+                        if (role.equals("Student")) {
+                            studentService.addStudent(userID, name, surname, email, phone, password);
+                        }
+                        if (role == "Admin") {
+                            adminService.addAdmin(name, surname, email, phone, password);
+                        }
+                        updateUserTable();
+                    } catch (SQLException se) {
+                        throw new RuntimeException(se);
                     }
-                    if (role == "Admin"){
-                        Admin.addAdmin(userID, name, surname, email, phone, password);
-                    }
-                    updateUserTable();
                 }
 
 
@@ -514,14 +524,21 @@ public class MainDashboardPanel extends JPanel {
         CounselorUpdateButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                updateCounselor();
-
+                try {
+                    updateCounselor();
+                }  catch (SQLException se) {
+                    throw new RuntimeException(se);
+                }
             }
         });
         CounselorDeleteButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                deleteCounselor();
+                try {
+                    deleteCounselor();
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
 
             }
         });
@@ -546,8 +563,13 @@ public class MainDashboardPanel extends JPanel {
                                     "\nTime: " + time);
 
                     clearFields();
-                    Appointment.addAppointment(appointmentID,studentID,counselorID,date,time);
-                    updateAppointmentsTable();
+                    try {
+                        appointmentService.addAppointment(studentID, counselorID, LocalDate.parse(date), LocalTime.parse(time));
+                        updateAppointmentsTable();
+                    } catch (SQLException ex) {
+                        throw new RuntimeException(ex);
+                    }
+
                 }
             }
 
@@ -573,8 +595,12 @@ public class MainDashboardPanel extends JPanel {
                 JOptionPane.showMessageDialog(null, "Appointment updated successfully!");
 
                 clearFields();
-                Appointment.updateAppointment(appointmentId,date,time);
-                updateAppointmentsTable();
+                try {
+                    appointmentService.updateAppointment(appointmentId, LocalDate.parse(date), LocalTime.parse(time), Appointment.AppointmentStatus.SCHEDULED);
+                    updateAppointmentsTable();
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
 
             }
         });
@@ -582,7 +608,11 @@ public class MainDashboardPanel extends JPanel {
         CounselorAddButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                addCounselor();
+                try {
+                    addCounselor();
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
             }
         });
         //delete appointment button
@@ -637,13 +667,18 @@ public class MainDashboardPanel extends JPanel {
                                     "\nPhone: " + phone +
                                     "\nRole: " + role);
                     clearUserFields();
-                    if (role == "Student"){
-                        Student.updateStudent(userID, name, surname, email, phone, password);
+
+                    try {
+                        if (role == "Student"){
+                            studentService.updateStudent(userID, name, surname, email, phone, password);
+                        }
+                        if (role =="Admin"){
+                            adminService.updateAdmin(email, name, surname, phone, password);
+                        }
+                        updateUserTable();
+                    } catch (SQLException ex) {
+                        throw new RuntimeException(ex);
                     }
-                    if (role =="Admin"){
-                        Admin.updateAdmin(userID, name, surname, email, phone, password);
-                    }
-                    updateUserTable();
                 }
             }
         });
@@ -659,13 +694,18 @@ public class MainDashboardPanel extends JPanel {
                 } else {
                     JOptionPane.showMessageDialog(null, "User with ID " + userID + " deleted.");
                     clearUserFields();
-                    if (Objects.equals(userRole, "Student")){
-                        Student.deleteStudent(userID);
+
+                    try {
+                        if (Objects.equals(userRole, "Student")){
+                            studentService.deleteStudent(userID);
+                        }
+                        if (Objects.equals(userRole, "Admin")){
+                            adminService.deleteAdmin(userID);
+                        }
+                        updateUserTable();
+                    } catch (SQLException ex) {
+                        throw new RuntimeException(ex);
                     }
-                    if (Objects.equals(userRole, "Admin")){
-                        Admin.deleteAdmin(userID);
-                    }
-                    updateUserTable();
                 }
             }
         });
@@ -673,23 +713,26 @@ public class MainDashboardPanel extends JPanel {
         FeedbackAddButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String feedbackID = FedbackIDTextBox.getText().trim();
                 String appointmentID = FeedbackAppointIDTextBox.getText().trim();
                 String studentNumber = FeedbackStudentNumberTextBox.getText().trim();
                 String rating = (String) FeedbackRatingComboBox.getSelectedItem();
                 String comment = FeedbackCommentTextArea.getText().trim();
-                if (feedbackID.isEmpty() || appointmentID.isEmpty() || studentNumber.isEmpty() || rating == null || comment.isEmpty()) {
+                if (appointmentID.isEmpty() || studentNumber.isEmpty() || rating == null || comment.isEmpty()) {
                     JOptionPane.showMessageDialog(null, "Please fill in all fields.");
                 } else {
                     JOptionPane.showMessageDialog(null,
-                            "Feedback Added:\nFeedback ID: " + feedbackID +
+                            "Feedback Added:"+
                                     "\nAppointment ID: " + appointmentID +
                                     "\nStudent Number: " + studentNumber +
                                     "\nRating: " + rating +
                                     "\nComment: " + comment);
                     clearFeedbackFields();
-                    Feedback.addFeedback(feedbackID,appointmentID,studentNumber,rating,comment);
-                    updateFeedbackTable();
+                    try {
+                        feedbackService.addFeedback(appointmentID,studentNumber,Integer.parseInt(rating),comment);
+                        updateFeedbackTable();
+                    } catch (SQLException ex) {
+                        throw new RuntimeException(ex);
+                    }
                 }
             }
         });
@@ -719,8 +762,13 @@ public class MainDashboardPanel extends JPanel {
                                     "\nRating: " + rating +
                                     "\nComment: " + comment);
                     clearFeedbackFields();
-                    Feedback.updateFeedback(feedbackID,rating,comment);
-                    updateFeedbackTable();
+                    try {
+                        feedbackService.updateFeedback(feedbackID, Integer.parseInt(rating), comment);
+                        updateFeedbackTable();
+                    } catch (SQLException ex) {
+                        throw new RuntimeException(ex);
+                    }
+
                 }
             }
         });
@@ -735,18 +783,23 @@ public class MainDashboardPanel extends JPanel {
                 } else {
                     JOptionPane.showMessageDialog(null, "Feedback with ID " + feedbackID + " deleted.");
                     clearFeedbackFields();
-                    Feedback.deleteFeedback(feedbackID);
-                    updateFeedbackTable();
+                    try {
+                        feedbackService.deleteFeedback(feedbackID);
+                        updateFeedbackTable();
+                    } catch (SQLException ex) {
+                        throw new RuntimeException(ex);
+                    }
+
                 }
             }
         });
     }
 
-    private void updateFeedbackTable() {
+    private void updateFeedbackTable() throws SQLException {
         if (FeedbackTableModel != null){
             FeedbackTableModel.setRowCount(0);
 
-            for (Feedback feedback : Feedback.AllFeedback){
+            for (Feedback feedback : new FeedbackService().getAllFeedback()){
                 Object[] rowData = {
                         feedback.getFeedbackId(),
                         feedback.getAppointmentId(),
@@ -759,11 +812,11 @@ public class MainDashboardPanel extends JPanel {
         }
     }
 
-    private void updateAppointmentsTable(){
+    private void updateAppointmentsTable() throws SQLException{
         if (AppointmentTableModel != null){
             AppointmentTableModel.setRowCount(0);
 
-            for (Appointment appointment : Appointment.AllAppointments){
+            for (Appointment appointment : new AppointmentService().getAllAppointments()){
                 Object[] rowData = {
                         appointment.getAppointmentId(),
                         appointment.getStudentNumber(),
@@ -776,11 +829,11 @@ public class MainDashboardPanel extends JPanel {
             }
         }
     }
-    private void updateUserTable() {
+    private void updateUserTable() throws SQLException {
         if (StudentsTableModel != null){
             StudentsTableModel.setRowCount(0);
 
-            for (Admin admin : Admin.AllAdmins) {
+            for (Admin admin : new AdminService().getAllAdmins()) {
                 Object[] rowData = {
                         admin.getAdminID(),
                         admin.getName(),
@@ -791,7 +844,7 @@ public class MainDashboardPanel extends JPanel {
                 };
                 StudentsTableModel.addRow(rowData);
             }
-            for (Student student : Student.AllStudents){
+            for (Student student : new StudentService().getAllStudents()) {
                 Object[] rowData = {
                         student.getStudentNumber(),
                         student.getName(),
@@ -1040,7 +1093,7 @@ public class MainDashboardPanel extends JPanel {
     }
 
     // add counselor
-    private void addCounselor() {
+    private void addCounselor() throws SQLException {
         String name = CounselorNameTextBox.getText().trim();
         String specialization = (String) CounselorSpecializationComboBox.getSelectedItem();
         StringBuilder availability = new StringBuilder();
@@ -1063,11 +1116,12 @@ public class MainDashboardPanel extends JPanel {
             return;
         }
         System.out.println("Counselor Added: " + name + ", " + specialization + ", " + availabilityStr);
+        new CounsellorService().addCounsellor(name, specialization, availabilityStr);
         JOptionPane.showMessageDialog(null, "Counselor added successfully!");
     }
 
     // update Counselor
-    private void updateCounselor() {
+    private void updateCounselor() throws SQLException{
         String idText = CounselorIDTextBox.getText().trim();
         if (idText.isEmpty()) {
             JOptionPane.showMessageDialog(null, "Counselor ID is required for update!", "Validation Error", JOptionPane.ERROR_MESSAGE);
@@ -1098,11 +1152,12 @@ public class MainDashboardPanel extends JPanel {
         }
 
         System.out.println("Update Counselor: ID=" + counselorId + ", " + name + ", " + specialization + ", " + availabilityStr);
+        new CounsellorService().updateCounsellor("" + counselorId, name, specialization, availabilityStr);
         JOptionPane.showMessageDialog(null, "Counselor updated successfully!");
     }
 
     // delete Counselor
-    private void deleteCounselor() {
+    private void deleteCounselor() throws SQLException {
         String idText = CounselorIDTextBox.getText().trim();
         int counselorId;
         try {
@@ -1112,6 +1167,7 @@ public class MainDashboardPanel extends JPanel {
             return;
         }
         System.out.println("Delete Counselor: ID=" + counselorId);
+        new CounsellorService().deleteCounsellor("" + counselorId);
         JOptionPane.showMessageDialog(null, "Counselor deleted successfully!");
     }
 
